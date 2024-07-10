@@ -6,7 +6,7 @@ function App() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`http://16.171.20.170:8080/BarCode?porte=${porte}`, {
+      const response = await fetch(`https://16.171.20.170:8080/BarCode?porte=${porte}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
