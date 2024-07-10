@@ -11,6 +11,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
         },
+        agent: new https.Agent({ rejectUnauthorized: false })
       });
       if (!response.ok) {
         throw new Error("Failed to create barcode");
