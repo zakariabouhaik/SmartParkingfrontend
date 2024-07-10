@@ -6,12 +6,11 @@ function App() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`https://ec2-16-171-20-170.eu-north-1.compute.amazonaws.com/BarCode?porte=${porte}`, {
+      const response = await fetch(`http://ec2-16-171-20-170.eu-north-1.compute.amazonaws.com/BarCode?porte=${porte}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        agent: new https.Agent({ rejectUnauthorized: false })
       });
       if (!response.ok) {
         throw new Error("Failed to create barcode");
