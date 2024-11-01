@@ -5,27 +5,33 @@ function App() {
   const [porte, setPorte] = useState('');
   const [barcode, setBarcode] = useState('');
   const [parkingCode, setParkingCode] = useState('');
+  const [prix, setPrix] = useState('');
+  const [imageparking,setImageparking]= useState('');
 
   const handleParkingChange = (selectedOption) => {
     setParkingCode(selectedOption.value);
+    setPrix(selectedOption.prix)
+    setImageparking(selectedOption.imageparking)
   };
   
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`http://16.171.20.170:8080/BarCode?porte=${porte}`, {
+      const response = await fetch('https://er8wa98ace.execute-api.us-east-1.amazonaws.com/dev/createBardCode', {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ parkingCode: parseInt(parkingCode) }),
+        
+        body: JSON.stringify({ porte:porte,
+          parking:parkingCode,
+          prix:prix,
+          imageparking:imageparking
+         }),
       });
       if (!response.ok) {
         throw new Error("Failed to create barcode");
       }
-      const barcodeBlob = await response.blob();
-      const barcodeUrl = URL.createObjectURL(barcodeBlob);
-      setBarcode(barcodeUrl);
+      const data = await response.json();
+      setBarcode(data.barcodeImage)
+       
     } catch (error) {
       console.error("Error creating barcode:", error);
     }
@@ -58,9 +64,17 @@ function App() {
           <ReactSelect 
             id="selectOption" 
             options={[
-              { value: "1", label: "MOROCCO MALL" },
-              { value: "2", label: "MARJANE CALIFORNIE" },
-              { value: "3", label: "CARREFOUR SIDI MAAROUF" },
+              { value: "MOROCCO MALL", label: "MOROCCO MALL",prix:"5",imageparking:"https://upload.wikimedia.org/wikipedia/commons/9/99/Logo_Morocco_Mall.png" },
+              { value: "MARJANE CALIFORNIE", label: "MARJANE CALIFORNIE",prix:"5",imageparking:"https://play-lh.googleusercontent.com/tz1ySx3X4GXk-erElWv-lEeRBmPa68BwEFlffRNhWjPceC2TrfGXAoIHIsLpM_qZDO0=w240-h480-rw"},
+              { value: "CARREFOUR SIDI MAAROUF", label: "CARREFOUR SIDI MAAROUF",prix:"5",imageparking:"https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Logo_Carrefour.svg/640px-Logo_Carrefour.svg.png" },
+              { value: "TechnoPark", label: "TechnoPark",prix:"5",imageparking:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV6ICXikfpiSk7Ld-bvN8NCs_N5R-BLuCamw&s" },
+              { value: "Atacadao", label: "Atacadao",prix:"5",imageparking:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLbo7q7BvskP04kAYg1RVb1Q3-a7nLyFBMig&s" },
+              { value: "Rue Moulay Bouchaib", label: "Rue Moulay Bouchaib",prix:"2",imageparking:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqPQv-Kec1ZAvn1wOh6gOfLNwktG6Prb0TvQ&s" },
+              { value: "3 Rue Ibn Bouraid", label: "3 Rue Ibn Bouraid" ,prix:"2",imageparking:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqPQv-Kec1ZAvn1wOh6gOfLNwktG6Prb0TvQ&s"},
+              { value: "1 Rue Al Mortada", label: "1 Rue Al Mortada",prix:"2",imageparking:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqPQv-Kec1ZAvn1wOh6gOfLNwktG6Prb0TvQ&s" },
+              { value: "Rue Charam Achaykh", label: "Rue Charam Achaykh",prix:"2",imageparking:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqPQv-Kec1ZAvn1wOh6gOfLNwktG6Prb0TvQ&s" },
+              { value: "Rue du Louvre", label: "Rue du Louvre",prix:"2",imageparking:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqPQv-Kec1ZAvn1wOh6gOfLNwktG6Prb0TvQ&s" },
+              
             ]}
             onChange={handleParkingChange}
             styles={{
@@ -68,7 +82,12 @@ function App() {
                 ...provided,
                 width: '100%',
               }),
+              menu:(provided)=>({
+                ...provided,
+                maxHeight:'120px'
+              })
             }}
+            maxMenuHeight={120}
           />
         </div>
         {barcode && <img src={barcode} alt="Generated Barcode" style={{...styles.barcode, maxWidth: '100%'}} />}
